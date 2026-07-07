@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Matrices — {{ app_name }}{% endblock %}
+{% block contenido %}
+<h1>Matrices estratégicas</h1>
+
+<section class="panel">
+  <h2>Nueva matriz</h2>
+  <form id="form-matriz" class="form-inline">
+    <label>Empresa ID <input type="number" id="empresa_id" value="1" min="1" required></label>
+    <label>Tipo
+      <select id="tipo" required>
+        <option value="efi">EFI</option>
+        <option value="efe">EFE</option>
+        <option value="aoor">AOOR</option>
+        <option value="aprovechabilidad">Aprovechabilidad</option>
+        <option value="mpc">MPC</option>
+        <option value="madi">MADI</option>
+        <option value="made">MADE</option>
+        <option value="peyea">PEYEA</option>
+        <option value="pestel">PESTEL</option>
+        <option value="holmes">Holmes</option>
+        <option value="ansoff">Ansoff</option>
+        <option value="cinco_fuerzas">5 Fuerzas</option>
+      </select>
+    </label>
+    <label>Nombre <input type="text" id="nombre" required></label>
+    <button type="submit">Crear</button>
+  </form>
+</section>
+
+<section class="panel">
+  <h2>Listado</h2>
+  <table id="tabla-matrices">
+    <thead><tr><th>ID</th><th>Tipo</th><th>Nombre</th><th>Acciones</th></tr></thead>
+    <tbody></tbody>
+  </table>
+</section>
+
+<section class="panel" id="panel-detalle" hidden>
+  <h2>Detalle / Cálculo</h2>
+  <div id="detalle"></div>
+  <div class="grafico"><canvas id="lienzo"></canvas></div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/matrices.js"></script>
+{% endblock %}

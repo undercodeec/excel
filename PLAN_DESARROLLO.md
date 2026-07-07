@@ -228,13 +228,13 @@ Marca `[x]` al completar. No inicies una fase sin cerrar la anterior. Cada fase 
 - **DoD:** `pytest` pasa en verde; los cálculos coinciden con los del Excel original.
 
 ### Fase 2 — Módulo Matrices
-- [ ] Schemas Pydantic con validación de pesos (suma=1) y escalas
-- [ ] Router CRUD de matrices y factores
-- [ ] Endpoint de cálculo por tipo de matriz
-- [ ] UI: listado de matrices + formulario/tabla editable
-- [ ] Visualización PEYEA (gráfico de cuadrantes con el vector)
-- [ ] Visualización Ansoff (cuadrícula 2×2)
-- [ ] Visualización 5 Fuerzas (radar) y MPC (barras comparativas)
+- [x] Schemas Pydantic con validación de pesos (suma=1) y escalas
+- [x] Router CRUD de matrices y factores
+- [x] Endpoint de cálculo por tipo de matriz
+- [x] UI: listado de matrices + formulario/tabla editable
+- [x] Visualización PEYEA (gráfico de cuadrantes con el vector)
+- [x] Visualización Ansoff (cuadrícula 2×2)
+- [x] Visualización 5 Fuerzas (radar) y MPC (barras comparativas)
 - **DoD:** se puede crear una matriz, capturar datos y ver el resultado calculado + su gráfico.
 
 ### Fase 3 — Módulo Planes
@@ -302,16 +302,17 @@ Marca `[x]` al completar. No inicies una fase sin cerrar la anterior. Cada fase 
 
 > Actualiza esta sección al final de cada sesión de Claude Code.
 
-- **Fase actual:** Fase 2 — Módulo Matrices (sin iniciar)
-- **Última tarea completada:** Fase 1 completa (12 modelos, Alembic head, 7 módulos core, 32 tests verdes)
-- **Siguiente tarea:** Schemas Pydantic con validación de pesos (suma=1) y escalas
-- **Bloqueos / notas:** `test_valores_control_excel` en `skip` — faltan datos reales del Excel para validar VAN≈411.622 / TIR≈28.4%. Enums `sentido` en minúscula (directo/inverso).
+- **Fase actual:** Fase 3 — Módulo Planes (sin iniciar)
+- **Última tarea completada:** Fase 2 completa (schemas+router matrices, cálculo por tipo, UI+Chart.js, 36 tests verdes)
+- **Siguiente tarea:** CRUD de planes → estrategias → actividades
+- **Bloqueos / notas:** Falta router de Empresa (matrices requieren empresa_id existente; en tests se inserta directo). Ansoff/5F/MPC tienen gráfico pero sin captura de datos específica aún. SRI del CDN Chart.js pendiente (Fase 7). `test_valores_control_excel` sigue en `skip`.
 
 ### Registro de avance
 | Fecha | Sesión | Qué se hizo | Siguiente paso |
 |-------|--------|-------------|----------------|
 | 2026-07-07 | 1 | Fase 0: estructura §3, requirements, venv+install, config, database, main+/health (200), git init | Fase 1: modelos SQLAlchemy |
 | 2026-07-07 | 1 | Fase 1: 12 modelos SQLAlchemy §4, Alembic init+migración `7c3f6280e8d5` (upgrade head), core {ponderacion,holmes,peyea,pestel,finanzas,kpi,semaforo}, 32 tests verdes | Fase 2: schemas + router Matrices |
+| 2026-07-07 | 1 | Fase 2: schema matriz (valida pesos/escalas), service (CRUD+cálculo por tipo), router `/api/matrices`, UI (base/index/matrices + estilos.css + matrices.js con Chart.js: PEYEA/radar/barras/Ansoff), conftest StaticPool, 36 tests verdes | Fase 3: CRUD Planes |
 
 ---
 
