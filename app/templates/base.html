@@ -4,16 +4,28 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}{{ app_name }}{% endblock %}</title>
-  <link rel="stylesheet" href="/static/css/estilos.css">
+  <link rel="stylesheet" href="/static/css/estilos.css?v={{ static_css_version }}">
   <!-- TODO Fase 7: añadir integrity="sha384-..." crossorigin="anonymous" (SRI) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
+  <script src="/static/js/comun.js"></script>
 </head>
 <body>
   <header class="barra">
     <a href="/" class="marca">Planificación Estratégica</a>
     <nav>
       <a href="/matrices">Matrices</a>
+      <a href="/planes">Planes</a>
+      <a href="/cmi">CMI</a>
+      <a href="/dashboard">Dashboard</a>
     </nav>
+    <div class="sesion">
+      {% if usuario %}
+        <span>{{ usuario }}{% if empresa_id_sesion %} · Empresa {{ empresa_id_sesion }}{% endif %}</span>
+        <form method="post" action="/logout"><button type="submit" class="boton-link">Salir</button></form>
+      {% else %}
+        <a href="/login">Login</a>
+      {% endif %}
+    </div>
   </header>
   <main class="contenido">
     {% block contenido %}{% endblock %}

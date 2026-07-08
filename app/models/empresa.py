@@ -20,6 +20,7 @@ class Empresa(Base):
     matrices: Mapped[list["Matriz"]] = relationship(back_populates="empresa", cascade="all, delete-orphan")
     planes: Mapped[list["Plan"]] = relationship(back_populates="empresa", cascade="all, delete-orphan")
     perspectivas: Mapped[list["Perspectiva"]] = relationship(back_populates="empresa", cascade="all, delete-orphan")
+    usuarios: Mapped[list["Usuario"]] = relationship(back_populates="empresa", cascade="all, delete-orphan")
     premisas: Mapped["PremisasFinancieras | None"] = relationship(
         back_populates="empresa", cascade="all, delete-orphan", uselist=False
     )
@@ -42,3 +43,4 @@ class PremisasFinancieras(Base):
 from app.models.matriz import Matriz  # noqa: E402
 from app.models.plan import Plan  # noqa: E402
 from app.models.cmi import Perspectiva  # noqa: E402
+from app.models.auth import Usuario  # noqa: E402

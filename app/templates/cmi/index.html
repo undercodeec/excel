@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}CMI - {{ app_name }}{% endblock %}
+{% block contenido %}
+<h1>Cuadro de Mando Integral</h1>
+
+<section class="panel">
+  <form id="form-contexto-cmi" class="form-inline">
+    <label>Empresa ID <input type="number" id="cmi_empresa_id" value="1" min="1" required></label>
+    <button type="submit">Cargar</button>
+  </form>
+</section>
+
+<section id="tablero-cmi" class="tablero-cmi"></section>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/cmi.js"></script>
+{% endblock %}

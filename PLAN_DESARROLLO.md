@@ -238,41 +238,41 @@ Marca `[x]` al completar. No inicies una fase sin cerrar la anterior. Cada fase 
 - **DoD:** se puede crear una matriz, capturar datos y ver el resultado calculado + su gráfico.
 
 ### Fase 3 — Módulo Planes
-- [ ] CRUD de planes → estrategias → actividades
-- [ ] Totalización automática por plan y consolidado
-- [ ] Endpoint de dashboard financiero (proyección 5 años)
-- [ ] UI: tablas editables por plan (7 pestañas)
-- [ ] UI: dashboard financiero (estado de resultados, flujo, balance, VAN/TIR/payback)
+- [x] CRUD de planes → estrategias → actividades
+- [x] Totalización automática por plan y consolidado
+- [x] Endpoint de dashboard financiero (proyección 5 años)
+- [x] UI: tablas editables por plan (7 pestañas)
+- [x] UI: dashboard financiero (estado de resultados, flujo, balance, VAN/TIR/payback)
 - **DoD:** cambiar una premisa recalcula todo el dashboard; los 7 planes suman su TOTAL.
 
 ### Fase 4 — Módulo KPI
-- [ ] CRUD estrategia → actividad → indicador
-- [ ] Gestión de ponderaciones tácticas + validación de suma
-- [ ] Cálculo de KPI (numerador/denominador) por frecuencia
-- [ ] UI: matriz de indicadores con edición inline
+- [x] CRUD estrategia → actividad → indicador
+- [x] Gestión de ponderaciones tácticas + validación de suma
+- [x] Cálculo de KPI (numerador/denominador) por frecuencia
+- [x] UI: matriz de indicadores con edición inline
 - **DoD:** cada actividad tiene su KPI con fórmula y frecuencia; los pesos suman ~100%.
 
 ### Fase 5 — Módulo CMI (Cuadro de Mando Integral)
-- [ ] CRUD perspectivas → objetivos → indicadores → mediciones
-- [ ] Captura periódica de valores (soportar varias frecuencias)
-- [ ] Evaluación de semáforos (directo/inverso)
-- [ ] UI: tablero por 4 perspectivas con estado semaforizado
-- [ ] Gráficos por perspectiva (líneas de tendencia, cumplimiento)
+- [x] CRUD perspectivas → objetivos → indicadores → mediciones
+- [x] Captura periódica de valores (soportar varias frecuencias)
+- [x] Evaluación de semáforos (directo/inverso)
+- [x] UI: tablero por 4 perspectivas con estado semaforizado
+- [x] Gráficos por perspectiva (líneas de tendencia, cumplimiento)
 - **DoD:** al ingresar un valor, el indicador se pinta verde/amarillo/rojo automáticamente.
 
 ### Fase 6 — Integración, trazabilidad y exportación
-- [ ] Vincular Estrategia (matrices) → Plan → KPI → Indicador CMI
-- [ ] Dashboard general (resumen de los 4 módulos)
-- [ ] Exportar a Excel (openpyxl) conservando estructura de los entregables
-- [ ] Exportar a PDF (informe ejecutivo)
-- **DoD:** desde una estrategia se navega a su plan, su KPI y su indicador de control.
+- [x] Vincular Estrategia (matrices) → Plan → KPI → Indicador CMI
+- [x] Dashboard general (resumen de los 4 módulos)
+- [x] Exportar a Excel (openpyxl) conservando estructura de los entregables
+- [~] Exportar a PDF (informe ejecutivo) — **omitido por decisión del usuario (no se requiere PDF)**
+- **DoD:** desde una estrategia se navega a su plan, su KPI y su indicador de control. ✅ (endpoint de trazabilidad)
 
 ### Fase 7 — Pulido y despliegue
-- [ ] Manejo de errores y mensajes de validación en UI
-- [ ] Autenticación básica (login por empresa/usuario)
-- [ ] Migrar a PostgreSQL (probar la misma migración Alembic)
-- [ ] README con instrucciones de instalación y uso
-- [ ] Despliegue (Docker opcional)
+- [x] Manejo de errores y mensajes de validación en UI
+- [x] Autenticación básica (login por empresa/usuario)
+- [x] README con instrucciones de instalación y uso
+- [x] Despliegue (Docker opcional)
+- [ ] Migrar a PostgreSQL (probar la misma migración Alembic) — **dejar al final por decisión del usuario**
 - **DoD:** un usuario nuevo puede instalar, cargar datos y exportar un informe completo.
 
 ---
@@ -302,10 +302,10 @@ Marca `[x]` al completar. No inicies una fase sin cerrar la anterior. Cada fase 
 
 > Actualiza esta sección al final de cada sesión de Claude Code.
 
-- **Fase actual:** Fase 3 — Módulo Planes (sin iniciar)
-- **Última tarea completada:** Fase 2 completa (schemas+router matrices, cálculo por tipo, UI+Chart.js, 36 tests verdes)
-- **Siguiente tarea:** CRUD de planes → estrategias → actividades
-- **Bloqueos / notas:** Falta router de Empresa (matrices requieren empresa_id existente; en tests se inserta directo). Ansoff/5F/MPC tienen gráfico pero sin captura de datos específica aún. SRI del CDN Chart.js pendiente (Fase 7). `test_valores_control_excel` sigue en `skip`.
+- **Fase actual:** Fase 7 — Pulido y despliegue (en curso)
+- **Última tarea completada:** Fase 7: despliegue Docker opcional — `Dockerfile`, `.dockerignore`, `docker-compose.yml` con volumen persistente SQLite, `SECRET_KEY` por entorno y arranque con `alembic upgrade head` + `uvicorn`; README actualizado; 72 tests verdes + 1 skip
+- **Siguiente tarea:** Migrar a PostgreSQL (probar la misma migración Alembic) — al final por decisión del usuario
+- **Bloqueos / notas:** PostgreSQL queda al final por decisión del usuario y no se puede probar aún en esta máquina porque `psql`/`postgres` no están instalados. Docker tampoco está instalado localmente, por lo que el build queda pendiente de validar en un entorno con Docker. Falta router de Empresa (matrices requieren empresa_id existente; en tests se inserta directo). Ansoff/5F/MPC tienen gráfico pero sin captura de datos específica aún. SRI del CDN Chart.js pendiente (Fase 7). `test_valores_control_excel` sigue en `skip`. Trabajo de Fases 3-5 aún sin commitear (git log solo llega a Fase 2). La vinculación es de backend/datos; UI de navegación de trazabilidad puede sumarse junto al dashboard general.
 
 ### Registro de avance
 | Fecha | Sesión | Qué se hizo | Siguiente paso |
@@ -313,6 +313,24 @@ Marca `[x]` al completar. No inicies una fase sin cerrar la anterior. Cada fase 
 | 2026-07-07 | 1 | Fase 0: estructura §3, requirements, venv+install, config, database, main+/health (200), git init | Fase 1: modelos SQLAlchemy |
 | 2026-07-07 | 1 | Fase 1: 12 modelos SQLAlchemy §4, Alembic init+migración `7c3f6280e8d5` (upgrade head), core {ponderacion,holmes,peyea,pestel,finanzas,kpi,semaforo}, 32 tests verdes | Fase 2: schemas + router Matrices |
 | 2026-07-07 | 1 | Fase 2: schema matriz (valida pesos/escalas), service (CRUD+cálculo por tipo), router `/api/matrices`, UI (base/index/matrices + estilos.css + matrices.js con Chart.js: PEYEA/radar/barras/Ansoff), conftest StaticPool, 36 tests verdes | Fase 3: CRUD Planes |
+| 2026-07-07 | 1 | Fase 3: CRUD de planes/estrategias/actividades con schemas, service, router `/api/planes` y tests de integración; 40 tests verdes + 1 skip | Fase 3: totalización automática por plan y consolidado |
+| 2026-07-07 | 1 | Fase 3: totalización automática por plan, por estrategia y consolidado por empresa; endpoints `/api/planes/{plan_id}/totales` y `/api/planes/consolidado/totales`; 42 tests verdes + 1 skip | Fase 3: endpoint de dashboard financiero |
+| 2026-07-07 | 1 | Fase 3: endpoint `/api/planes/dashboard/financiero` con proyección a 5 años, premisas por empresa o default, VAN, TIR, payback y punto de equilibrio; 45 tests verdes + 1 skip | Fase 3: UI tablas editables por plan |
+| 2026-07-07 | 1 | Fase 3: UI `/planes` con 7 pestañas, creación de planes, alta/edición/borrado de estrategias y actividades, totales por plan/empresa; 47 tests verdes + 1 skip; servidor verificado en 127.0.0.1:8000 | Fase 3: UI dashboard financiero |
+| 2026-07-07 | 1 | Fase 3: UI dashboard financiero en `/planes` con parámetros base, valores demo, premisas, métricas VAN/TIR/payback/punto equilibrio, tabla de proyección y gráfico Chart.js; 47 tests verdes + 1 skip; `/planes` 200 | Fase 4: CRUD KPI |
+| 2026-07-07 | 1 | Fase 4: schemas, service y router para indicadores KPI por estrategia; endpoints CRUD `/api/planes/estrategias/{estrategia_id}/indicadores` y `/api/planes/indicadores/{indicador_id}`; estrategias devuelven actividades e indicadores; 51 tests verdes + 1 skip | Fase 4: ponderaciones tácticas |
+| 2026-07-07 | 1 | Fase 4: endpoint de validación de ponderaciones tácticas por estrategia usando `app.core.kpi.validar_ponderaciones`; devuelve total, diferencia, estado válido e indicadores; 53 tests verdes + 1 skip | Fase 4: cálculo KPI por frecuencia |
+| 2026-07-07 | 1 | Fase 4: endpoint `/api/planes/indicadores/{indicador_id}/calcular` para numerador/denominador por periodo y tipo_periodo, usando fórmula/frecuencia del indicador; 55 tests verdes + 1 skip | Fase 4: UI matriz de indicadores |
+| 2026-07-07 | 1 | Fase 4: UI en `/planes` para matriz de indicadores con alta/edición/borrado inline, validación de ponderaciones por estrategia y cálculo rápido de KPI; 55 tests verdes + 1 skip; `/planes` 200 | Fase 5: CRUD CMI |
+| 2026-07-07 | 1 | Fase 5: schemas, service y router `/api/cmi` para perspectivas, objetivos, indicadores y mediciones; captura flexible por `periodo`/`tipo_periodo`; endpoint `/api/cmi/mediciones/{medicion_id}/semaforo`; 59 tests verdes + 1 skip | Fase 5: UI tablero CMI |
+| 2026-07-07 | 1 | Fase 5: vista `/cmi` con tablero por cuatro perspectivas, creación rápida de perspectivas/objetivos/indicadores, captura de mediciones, evaluación semaforizada y gráficos de tendencia por perspectiva; 60 tests verdes + 1 skip; servidor verificado en 127.0.0.1:8001 | Fase 6: trazabilidad |
+| 2026-07-07 | 1 | Fase 6: trazabilidad — FKs `Estrategia.matriz_id` e `IndicadorCMI.kpi_id`, migración Alembic `a1b2c3d4e5f6` (up/down OK), schemas/services propagan los enlaces, módulo `trazabilidad` (schema+service+router) con `GET /api/trazabilidad/estrategia/{id}`; 63 tests verdes + 1 skip; ruta visible en OpenAPI | Fase 6: dashboard general (resumen 4 módulos) |
+| 2026-07-07 | 1 | Fase 6: dashboard general — módulo `dashboard` (schema+service+router) `GET /api/dashboard/general` que agrega Matrices/Planes/KPI/CMI + semáforos por última medición + trazabilidad; vista `/dashboard` (tarjetas + doughnut Chart.js), nav e índice actualizados; 67 tests verdes + 1 skip; `/dashboard` 200 en vivo (puerto 8009) | Fase 6: exportar a Excel (openpyxl) |
+| 2026-07-07 | 1 | Fase 6: exportación Excel — `app/export/excel.py` (hojas Resumen/Matrices/Planes/KPI/CMI, estilos, TOTAL, semáforo coloreado) y router `GET /api/export/excel`; enlace de descarga en `/dashboard`; 70 tests verdes + 1 skip | Fase 6: exportar a PDF (reportlab) |
+| 2026-07-08 | 1 | Fase 7: manejo de errores y validación UI — helper compartido para errores API/422, toasts accesibles, marcado de campos inválidos y manejo explícito de acciones async en Matrices/Planes/CMI/Dashboard; 70 tests verdes + 1 skip; JS validado con `node --check` del runtime local | Fase 7: autenticación básica |
+| 2026-07-08 | 1 | Fase 7: autenticación básica — tabla `usuario`, servicio de auth con PBKDF2, login/logout con sesión firmada, protección de vistas `/matrices`, `/planes`, `/cmi`, `/dashboard`, usuario demo local y tests de flujo; migración `b2c3d4e5f6a7` aplicada; 72 tests verdes + 1 skip | Fase 7: migrar a PostgreSQL |
+| 2026-07-08 | 1 | Fase 7: README — guía completa de instalación, `alembic upgrade head`, ejecución con uvicorn, login demo, variables `.env`, flujo por módulos, exportación Excel, tests, migraciones y notas operativas; PostgreSQL movido al final por decisión del usuario | Fase 7: despliegue (Docker opcional) |
+| 2026-07-08 | 1 | Fase 7: despliegue Docker opcional — `Dockerfile`, `.dockerignore`, `docker-compose.yml` con SQLite persistente en volumen, `SECRET_KEY` por entorno y comando de arranque con migraciones Alembic + Uvicorn; README actualizado; Docker no instalado localmente para build | Fase 7: PostgreSQL al final |
 
 ---
 

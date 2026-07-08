@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Dashboard general - {{ app_name }}{% endblock %}
+{% block contenido %}
+<h1>Dashboard general</h1>
+<p>Resumen consolidado de los cuatro módulos: Matrices, Planes, KPI y CMI.</p>
+
+<section class="panel">
+  <form id="form-contexto-dashboard" class="form-inline">
+    <label>Empresa ID <input type="number" id="dash_empresa_id" value="1" min="1" required></label>
+    <button type="submit">Cargar</button>
+  </form>
+  <p id="dash_error" class="error" hidden></p>
+</section>
+
+<section id="tablero-dashboard" class="tablero-dashboard"></section>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/dashboard.js"></script>
+{% endblock %}

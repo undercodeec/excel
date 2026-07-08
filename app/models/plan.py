@@ -26,10 +26,13 @@ class Estrategia(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     plan_id: Mapped[int] = mapped_column(ForeignKey("plan.id"))
+    # Trazabilidad: matriz de diagnóstico de la que nace la estrategia (opcional).
+    matriz_id: Mapped[int | None] = mapped_column(ForeignKey("matriz.id"), default=None)
     tipo_estrategia: Mapped[str | None] = mapped_column(String(200), default=None)
     descripcion: Mapped[str] = mapped_column(String(400))
 
     plan: Mapped["Plan"] = relationship(back_populates="estrategias")
+    matriz: Mapped["Matriz | None"] = relationship()
     actividades: Mapped[list["Actividad"]] = relationship(
         back_populates="estrategia", cascade="all, delete-orphan"
     )
@@ -68,3 +71,4 @@ class Indicador(Base):
 
 
 from app.models.empresa import Empresa  # noqa: E402
+from app.models.matriz import Matriz  # noqa: E402

@@ -6,6 +6,7 @@ env/
 *.db
 *.sqlite3
 .env
+.env.production
 .pytest_cache/
 .mypy_cache/
 *.egg-info/
@@ -14,3 +15,6 @@ build/
 .DS_Store
 .idea/
 .vscode/
+.claude/
+.codebase-memory/
+.tokensave/

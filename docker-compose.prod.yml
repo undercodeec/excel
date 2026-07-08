@@ -1,0 +1,16 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: exel-app-prod
+    env_file:
+      - .env.production
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    volumes:
+      - app_data:/data
+
+volumes:
+  app_data:

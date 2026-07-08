@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %}Planes - {{ app_name }}{% endblock %}
+{% block contenido %}
+<h1>Planes tacticos</h1>
+
+<section class="panel">
+  <form id="form-contexto" class="form-inline">
+    <label>Empresa ID <input type="number" id="empresa_id" value="1" min="1" required></label>
+    <button type="submit">Cargar</button>
+  </form>
+</section>
+
+<section class="panel">
+  <div id="tabs-planes" class="tabs"></div>
+  <div class="resumen-linea">
+    <strong>Total plan:</strong> <span id="total-plan">$0.00</span>
+    <strong>Total empresa:</strong> <span id="total-empresa">$0.00</span>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel-encabezado">
+    <h2 id="titulo-plan">Plan</h2>
+    <button id="btn-crear-plan" type="button">Crear plan</button>
+  </div>
+
+  <form id="form-estrategia" class="form-inline">
+    <label>Tipo de estrategia <input type="text" id="tipo_estrategia" maxlength="200"></label>
+    <label class="campo-ancho">Estrategia <input type="text" id="descripcion_estrategia" maxlength="400" required></label>
+    <button type="submit">Agregar estrategia</button>
+  </form>
+</section>
+
+<section class="panel">
+  <div class="panel-encabezado">
+    <h2>Dashboard financiero</h2>
+    <button id="btn-dashboard-demo" type="button" class="sec">Valores demo</button>
+  </div>
+  <form id="form-dashboard" class="form-inline">
+    <label>Ventas base <input type="number" id="ventas_base" min="0" step="0.01" required></label>
+    <label>Costos base <input type="number" id="costos_base" min="0" step="0.01" required></label>
+    <label>Gastos operativos <input type="number" id="gastos_operativos_base" min="0" step="0.01"></label>
+    <label>Inversion inicial <input type="number" id="inversion_inicial" min="0" step="0.01"></label>
+    <label>Costos fijos <input type="number" id="costos_fijos" min="0" step="0.01"></label>
+    <label>Costos variables <input type="number" id="costos_variables" min="0" step="0.01"></label>
+    <button type="submit">Calcular</button>
+  </form>
+  <div id="dashboard-financiero" class="dashboard-financiero" hidden>
+    <div id="metricas-financieras" class="metricas"></div>
+    <div id="premisas-financieras" class="resumen-linea"></div>
+    <div class="grafico grafico-ancho"><canvas id="grafico-financiero"></canvas></div>
+    <table id="tabla-proyeccion">
+      <thead>
+        <tr>
+          <th>Año</th>
+          <th>Ventas</th>
+          <th>Costos</th>
+          <th>Utilidad bruta</th>
+          <th>Gastos operativos</th>
+          <th>EBITDA</th>
+          <th>Utilidad neta</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel">
+  <table id="tabla-planes" class="tabla-editable">
+    <thead>
+      <tr>
+        <th>Tipo estrategia</th>
+        <th>Estrategia</th>
+        <th>Actividad</th>
+        <th>Responsable</th>
+        <th>Tiempo</th>
+        <th>Costo</th>
+        <th>Cuenta</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</section>
+
+<section class="panel">
+  <div class="panel-encabezado">
+    <h2>Matriz de indicadores</h2>
+    <span id="resumen-ponderaciones" class="estado-ponderacion">Sin indicadores</span>
+  </div>
+  <table id="tabla-indicadores" class="tabla-editable tabla-indicadores">
+    <thead>
+      <tr>
+        <th>Estrategia</th>
+        <th>Tipo KPI</th>
+        <th>Indicador</th>
+        <th>Formula</th>
+        <th>Frecuencia</th>
+        <th>Peso</th>
+        <th>Periodo</th>
+        <th>Numerador</th>
+        <th>Denominador</th>
+        <th>Resultado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/planes.js"></script>
+{% endblock %}

@@ -40,6 +40,8 @@ class IndicadorCMI(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     objetivo_id: Mapped[int] = mapped_column(ForeignKey("objetivo_cmi.id"))
+    # Trazabilidad: KPI táctico (Indicador de plan) que este indicador de control mide (opcional).
+    kpi_id: Mapped[int | None] = mapped_column(ForeignKey("indicador.id"), default=None)
     nombre: Mapped[str] = mapped_column(String(300))
     meta: Mapped[float] = mapped_column(Float)
     ponderacion: Mapped[float | None] = mapped_column(Float, default=None)
@@ -48,6 +50,7 @@ class IndicadorCMI(Base):
     sentido: Mapped[Sentido] = mapped_column(SAEnum(Sentido), default=Sentido.directo)
 
     objetivo: Mapped["ObjetivoCMI"] = relationship(back_populates="indicadores")
+    kpi: Mapped["Indicador | None"] = relationship()
     mediciones: Mapped[list["Medicion"]] = relationship(
         back_populates="indicador", cascade="all, delete-orphan"
     )
@@ -66,3 +69,4 @@ class Medicion(Base):
 
 
 from app.models.empresa import Empresa  # noqa: E402
+from app.models.plan import Indicador  # noqa: E402

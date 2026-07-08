@@ -4,15 +4,8 @@
 const API = "/api/matrices";
 let grafico = null;
 
-async function jsonFetch(url, opciones) {
-  const r = await fetch(url, opciones);
-  if (!r.ok) {
-    let msg = r.statusText;
-    try { const e = await r.json(); msg = e.detail || JSON.stringify(e); } catch (_) {}
-    throw new Error(msg);
-  }
-  return r.status === 204 ? null : r.json();
-}
+// jsonFetch delega en el helper compartido apiFetch (comun.js).
+const jsonFetch = apiFetch;
 
 // ---------- Listado ----------
 async function cargarMatrices() {
@@ -29,11 +22,11 @@ async function cargarMatrices() {
     const td = document.createElement("td");
     const bCalc = document.createElement("button");
     bCalc.textContent = "Calcular";
-    bCalc.onclick = () => calcular(m.id, m.tipo);
+    bCalc.onclick = conManejoErrores(() => calcular(m.id, m.tipo), "Error al calcular");
     const bDel = document.createElement("button");
     bDel.textContent = "Eliminar";
     bDel.className = "peligro";
-    bDel.onclick = () => eliminar(m.id);
+    bDel.onclick = conManejoErrores(() => eliminar(m.id), "Error al eliminar");
     td.append(bCalc, " ", bDel);
     tr.append(td);
     cuerpo.append(tr);
@@ -43,6 +36,8 @@ async function cargarMatrices() {
 // ---------- Crear ----------
 document.querySelector("#form-matriz").addEventListener("submit", async (e) => {
   e.preventDefault();
+  if (!validarNumeroNoNegativo("#empresa_id", "La empresa debe ser un numero valido.")) return;
+  if (!validarTextoObligatorio("#nombre", "El nombre de la matriz es obligatorio.")) return;
   const payload = {
     empresa_id: Number(document.querySelector("#empresa_id").value),
     tipo: document.querySelector("#tipo").value,
@@ -57,7 +52,8 @@ document.querySelector("#form-matriz").addEventListener("submit", async (e) => {
     });
     document.querySelector("#nombre").value = "";
     await cargarMatrices();
-  } catch (err) { alert("Error al crear: " + err.message); }
+    notificar("Matriz creada.", "exito");
+  } catch (err) { notificar("Error al crear: " + err.message, "error"); }
 });
 
 async function eliminar(id) {
@@ -155,4 +151,4 @@ function dibujarAnsoff(ctx, r) {
   });
 }
 
-cargarMatrices();
+cargarMatrices().catch((err) => notificar("Error al cargar matrices: " + err.message, "error"));

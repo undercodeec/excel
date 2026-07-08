@@ -6,12 +6,20 @@
 body { margin: 0; font-family: system-ui, sans-serif; color: var(--texto); background: #fafafa; }
 .barra { display: flex; gap: 1.5rem; align-items: center; background: var(--azul); color: #fff; padding: .8rem 1.2rem; }
 .barra a { color: #fff; text-decoration: none; }
+.barra nav { display: flex; gap: 1rem; }
 .marca { font-weight: 700; }
-.contenido { max-width: 1000px; margin: 1.5rem auto; padding: 0 1rem; }
+.sesion { margin-left: auto; display: flex; align-items: center; gap: .6rem; font-size: .9rem; }
+.sesion form { margin: 0; }
+.boton-link { background: transparent; border: 1px solid rgba(255,255,255,.6); padding: .28rem .55rem; }
+.boton-link:hover { background: rgba(255,255,255,.16); }
+.contenido { max-width: 100%; margin: 1.5rem auto; padding: 0 1rem; }
 .panel { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem 1.2rem; margin-bottom: 1.2rem; }
 .form-inline { display: flex; flex-wrap: wrap; gap: 1rem; align-items: end; }
 .form-inline label { display: flex; flex-direction: column; font-size: .85rem; gap: .2rem; }
 input, select { padding: .4rem; border: 1px solid #bdbdbd; border-radius: 4px; }
+input:invalid,
+select:invalid,
+.campo-invalido { border-color: var(--rojo); box-shadow: 0 0 0 2px rgba(198, 40, 40, .12); }
 button { padding: .5rem 1rem; background: var(--azul); color: #fff; border: 0; border-radius: 4px; cursor: pointer; }
 button:hover { background: #0d47a1; }
 button.sec { background: #607d8b; }
@@ -21,3 +29,77 @@ th, td { text-align: left; padding: .5rem; border-bottom: 1px solid #eee; }
 .grafico { max-width: 520px; margin-top: 1rem; }
 .cuadrante { color: var(--azul); font-weight: 700; }
 .modulos { line-height: 1.8; }
+.tabs { display: flex; flex-wrap: wrap; gap: .5rem; }
+.tabs button { background: #eceff1; color: var(--texto); border: 1px solid #cfd8dc; }
+.tabs button.activo { background: var(--azul); color: #fff; border-color: var(--azul); }
+.resumen-linea { display: flex; flex-wrap: wrap; gap: .8rem 1.5rem; margin-top: 1rem; }
+.panel-encabezado { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.campo-ancho { flex: 1 1 280px; }
+.tabla-editable input { width: 100%; min-width: 7rem; }
+.tabla-editable input[type="number"] { min-width: 6rem; }
+.fila-estrategia { background: #f5f7f8; font-weight: 700; }
+.fila-estrategia td { border-top: 1px solid #cfd8dc; }
+.fila-nuevo-indicador { background: #f8fbff; }
+.acciones { display: flex; flex-wrap: wrap; gap: .35rem; }
+.mensaje-vacio { color: #607d8b; padding: 1rem 0; }
+.tabla-indicadores th,
+.tabla-indicadores td { vertical-align: top; }
+.tabla-indicadores input { min-width: 6.5rem; }
+.tabla-indicadores th:nth-child(4),
+.tabla-indicadores td:nth-child(4) { min-width: 12rem; }
+.estado-ponderacion { color: #607d8b; font-weight: 700; }
+.estado-ponderacion.ok { color: var(--verde); }
+.estado-ponderacion.alerta { color: var(--rojo); }
+.tablero-cmi { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.tarjeta-cmi { margin-bottom: 0; }
+.objetivo-cmi { border-top: 1px solid #e0e0e0; padding-top: .8rem; margin-top: .8rem; }
+.objetivo-cmi h3 { margin: 0 0 .7rem; font-size: 1rem; }
+.form-cmi { margin-bottom: .8rem; }
+.tabla-cmi input { min-width: 6rem; }
+.grafico-cmi { max-width: 100%; height: 240px; }
+.grafico-cmi canvas { max-height: 240px; }
+.semaforo { font-weight: 700; }
+.semaforo.verde { color: var(--verde); }
+.semaforo.amarillo { color: var(--amarillo); }
+.semaforo.rojo { color: var(--rojo); }
+.dashboard-financiero { margin-top: 1rem; }
+.metricas { display: grid; grid-template-columns: repeat(4, minmax(120px, 1fr)); gap: .75rem; margin: 1rem 0; }
+.metrica { border: 1px solid #e0e0e0; border-radius: 6px; padding: .75rem; background: #fff; }
+.metrica strong { display: block; font-size: .82rem; color: #607d8b; margin-bottom: .35rem; }
+.metrica span { font-size: 1.15rem; font-weight: 700; color: var(--azul); }
+.grafico-ancho { max-width: 100%; height: 320px; }
+.grafico-ancho canvas { max-height: 320px; }
+
+/* Dashboard general */
+.error { color: #d1493f; font-weight: 600; }
+.dashboard-empresa { margin: .5rem 0 1rem; }
+.dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+.tarjeta-dashboard { margin-bottom: 0; }
+.tarjeta-dashboard h2 { font-size: 1.05rem; margin: 0 0 .6rem; }
+.dash-metrica { display: flex; justify-content: space-between; gap: 1rem; margin: .3rem 0; border-bottom: 1px dashed #eee; padding-bottom: .3rem; }
+.dash-metrica .metrica-etiqueta { color: #607d8b; font-size: .9rem; }
+.dash-metrica .metrica-valor { font-weight: 700; color: var(--azul); }
+.lista-tipos { list-style: none; padding: 0; margin: .5rem 0 0; font-size: .88rem; color: #455a64; }
+.lista-tipos li { padding: .15rem 0; }
+.boton-export { background: #1f7a3f; color: #fff; padding: .45rem .8rem; border-radius: 6px; text-decoration: none; font-size: .9rem; white-space: nowrap; }
+.boton-export:hover { background: #17632f; }
+#notificaciones { position: fixed; right: 1rem; bottom: 1rem; display: grid; gap: .5rem; z-index: 1000; max-width: min(380px, calc(100vw - 2rem)); }
+.notificacion { background: #263238; color: #fff; border-radius: 6px; box-shadow: 0 6px 20px rgba(0,0,0,.18); padding: .75rem .9rem; line-height: 1.35; cursor: pointer; }
+.notificacion-error { background: #b71c1c; }
+.notificacion-exito { background: #1f7a3f; }
+.notificacion-info { background: #263238; }
+.panel-login { max-width: 420px; margin: 2rem auto; }
+.form-login { display: grid; gap: .8rem; }
+.form-login label { display: grid; gap: .25rem; font-size: .9rem; }
+.ayuda-login { color: #607d8b; font-size: .9rem; }
+
+@media (max-width: 760px) {
+  .contenido { max-width: 100%; }
+  .barra { flex-wrap: wrap; align-items: flex-start; }
+  .sesion { margin-left: 0; width: 100%; justify-content: space-between; }
+  .panel { overflow-x: auto; }
+  .panel-encabezado { align-items: flex-start; flex-direction: column; }
+  .metricas { grid-template-columns: 1fr 1fr; }
+  .tablero-cmi { grid-template-columns: 1fr; }
+  .dashboard-grid { grid-template-columns: 1fr; }
+}

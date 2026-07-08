@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     app_name: str = "Planificación Estratégica — Hacienda Celia María C.A."
 
     # Premisas financieras por defecto (§10 del plan)
+    secret_key: str = "dev-secret-change-me"
     inflacion: float = 0.04           # 4%
     crecimiento_ventas: float = 0.08  # 8%
     impuestos: float = 0.36           # 36%
