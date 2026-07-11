@@ -265,7 +265,7 @@ Marca `[x]` al completar. No inicies una fase sin cerrar la anterior. Cada fase 
 - [x] Dashboard general (resumen de los 4 módulos)
 - [x] Exportar a Excel (openpyxl) conservando estructura de los entregables
 - [~] Exportar a PDF (informe ejecutivo) — **omitido por decisión del usuario (no se requiere PDF)**
-- **DoD:** desde una estrategia se navega a su plan, su KPI y su indicador de control. ✅ (endpoint de trazabilidad)
+- **DoD:** desde una estrategia se navega a su plan, su KPI y su indicador de control. (endpoint de trazabilidad)
 
 ### Fase 7 — Pulido y despliegue
 - [x] Manejo de errores y mensajes de validación en UI

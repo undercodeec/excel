@@ -4,7 +4,9 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.schemas.matriz import MatrizCreate, MatrizRead, MatrizUpdate
+from app.schemas.trazabilidad import InformeMatrizRead
 from app.services import matrices as svc
+from app.services import trazabilidad as svc_traza
 
 router = APIRouter(prefix="/api/matrices", tags=["matrices"])
 
@@ -47,3 +49,12 @@ def calcular(matriz_id: int, db: Session = Depends(get_db)):
         return svc.calcular_matriz(db, matriz_id)
     except ValueError as e:
         raise HTTPException(400, str(e))
+
+
+@router.get("/{matriz_id}/informe", response_model=InformeMatrizRead)
+def informe(matriz_id: int, db: Session = Depends(get_db)):
+    """Informe completo: empresa + cálculo + estrategias/planes vinculados desde CMI."""
+    resultado = svc_traza.trazar_matriz(db, matriz_id)
+    if resultado is None:
+        raise HTTPException(404, "Matriz no encontrada")
+    return resultado

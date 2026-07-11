@@ -23,11 +23,15 @@ async function cargarMatrices() {
     const bCalc = document.createElement("button");
     bCalc.textContent = "Calcular";
     bCalc.onclick = conManejoErrores(() => calcular(m.id, m.tipo), "Error al calcular");
+    const bInf = document.createElement("button");
+    bInf.textContent = "Informe";
+    bInf.style.background = "#2e7d32";
+    bInf.onclick = conManejoErrores(() => verInforme(m.id), "Error al cargar informe");
     const bDel = document.createElement("button");
     bDel.textContent = "Eliminar";
     bDel.className = "peligro";
     bDel.onclick = conManejoErrores(() => eliminar(m.id), "Error al eliminar");
-    td.append(bCalc, " ", bDel);
+    td.append(bCalc, " ", bInf, " ", bDel);
     tr.append(td);
     cuerpo.append(tr);
   }
@@ -149,6 +153,121 @@ function dibujarAnsoff(ctx, r) {
       plugins: { title: { display: true, text: "Ansoff 2×2" } },
     },
   });
+}
+
+// ---------- Informe ----------
+function esc(val) {
+  if (val == null) return "—";
+  return String(val)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+document.querySelector("#btn-cerrar-informe").addEventListener("click", () => {
+  document.querySelector("#panel-informe").hidden = true;
+});
+
+async function verInforme(id) {
+  const panel = document.querySelector("#panel-informe");
+  panel.hidden = false;
+  panel.scrollIntoView({ behavior: "smooth" });
+
+  const inf = await jsonFetch(`${API}/${id}/informe`);
+
+  // --- Empresa ---
+  const emp = inf.empresa;
+  document.querySelector("#inf-empresa").innerHTML = `
+    <h3 style="margin:0 0 .5rem">${esc(emp.nombre)}</h3>
+    <p style="margin:.2rem 0"><strong>Período:</strong> ${esc(emp.periodo)} &nbsp;|&nbsp; <strong>Moneda:</strong> ${esc(emp.moneda)}</p>
+    ${emp.mision ? `<p style="margin:.2rem 0"><strong>Misión:</strong> ${esc(emp.mision)}</p>` : ""}
+    ${emp.vision ? `<p style="margin:.2rem 0"><strong>Visión:</strong> ${esc(emp.vision)}</p>` : ""}
+  `;
+
+  // --- Cálculo ---
+  const calc = inf.calculo;
+  let htmlCalc = `<h3>Resultado del cálculo — <em>${esc(inf.matriz_tipo.toUpperCase())}</em>: ${esc(inf.matriz_nombre)}</h3>`;
+
+  if (calc.cuadrante) {
+    // PEYEA
+    htmlCalc += `<table class="tabla-editable"><tbody>
+      <tr><td>FF</td><td>${esc(calc.ff?.toFixed(2))}</td></tr>
+      <tr><td>FI</td><td>${esc(calc.fi?.toFixed(2))}</td></tr>
+      <tr><td>EE</td><td>${esc(calc.ee?.toFixed(2))}</td></tr>
+      <tr><td>VC</td><td>${esc(calc.vc?.toFixed(2))}</td></tr>
+      <tr><td><strong>X (FI+VC)</strong></td><td>${esc(calc.x?.toFixed(2))}</td></tr>
+      <tr><td><strong>Y (FF+EE)</strong></td><td>${esc(calc.y?.toFixed(2))}</td></tr>
+      <tr><td><strong>Cuadrante</strong></td><td>${esc(calc.cuadrante)}</td></tr>
+    </tbody></table>`;
+  } else if (calc.total !== undefined) {
+    // Ponderados / PESTEL
+    htmlCalc += `<p><strong>Total ponderado:</strong> ${esc(calc.total?.toFixed(3))}</p>`;
+    if (calc.factores?.length) {
+      htmlCalc += `<table class="tabla-editable">
+        <thead><tr><th>Factor</th><th>Peso</th><th>Calificación</th><th>Resultado</th></tr></thead>
+        <tbody>
+          ${calc.factores.map(f => `<tr>
+            <td>${esc(f.descripcion ?? f.categoria)}</td>
+            <td>${esc(f.peso?.toFixed(3))}</td>
+            <td>${esc((f.calificacion ?? f.puntaje)?.toFixed(2))}</td>
+            <td><strong>${esc((f.resultado ?? f.puntaje)?.toFixed(3))}</strong></td>
+          </tr>`).join("")}
+        </tbody>
+      </table>`;
+    }
+  } else if (calc.filas) {
+    // Holmes
+    htmlCalc += `<table class="tabla-editable">
+      <thead><tr><th>Factor</th><th>Total</th><th>Orden</th></tr></thead>
+      <tbody>
+        ${calc.filas.map(f => `<tr><td>${esc(f.factor)}</td><td>${esc(f.total)}</td><td>${esc(f.orden)}</td></tr>`).join("")}
+      </tbody>
+    </table>`;
+  }
+  document.querySelector("#inf-calculo").innerHTML = htmlCalc;
+
+  // --- Estrategias vinculadas ---
+  const estDiv = document.querySelector("#inf-estrategias");
+  if (!inf.estrategias_vinculadas?.length) {
+    estDiv.innerHTML = `<p style="color:#888;margin-top:1rem">No hay estrategias vinculadas a esta matriz aún.</p>`;
+    return;
+  }
+
+  let htmlEst = `<h3 style="margin-top:1.5rem">Estrategias y planes derivados</h3>`;
+  for (const est of inf.estrategias_vinculadas) {
+    htmlEst += `
+      <div class="panel" style="margin-bottom:1rem;background:#f9f9f9">
+        <p style="margin:0 0 .3rem"><strong>Plan:</strong> ${esc(est.plan_tipo.toUpperCase())} &nbsp;|&nbsp;
+           <strong>Estrategia #${esc(est.estrategia_id)}:</strong> ${esc(est.descripcion)}</p>
+        ${est.tipo_estrategia ? `<p style="margin:0 0 .5rem;color:#555">Tipo: ${esc(est.tipo_estrategia)}</p>` : ""}
+        ${est.actividades?.length ? `
+          <details open>
+            <summary><strong>Actividades (${esc(est.actividades.length)})</strong></summary>
+            <table class="tabla-editable" style="margin-top:.5rem">
+              <thead><tr><th>Descripción</th><th>Responsable</th><th>Tiempo</th><th>Costo</th></tr></thead>
+              <tbody>
+                ${est.actividades.map(a => `<tr>
+                  <td>${esc(a.descripcion)}</td>
+                  <td>${esc(a.responsable)}</td>
+                  <td>${esc(a.tiempo)}</td>
+                  <td>${a.costo != null ? esc(a.costo.toLocaleString()) : "—"}</td>
+                </tr>`).join("")}
+              </tbody>
+            </table>
+          </details>` : ""}
+        ${est.kpis?.length ? `
+          <details style="margin-top:.5rem">
+            <summary><strong>KPIs (${esc(est.kpis.length)})</strong></summary>
+            <ul style="margin:.5rem 0 0 1rem">
+              ${est.kpis.map(k => `<li>${esc(k.nombre)}${k.formula ? ` — <em>${esc(k.formula)}</em>` : ""}
+                ${k.indicadores_cmi?.length ? ` → CMI: ${k.indicadores_cmi.map(i => esc(i.nombre)).join(", ")}` : ""}</li>`).join("")}
+            </ul>
+          </details>` : ""}
+      </div>`;
+  }
+  estDiv.innerHTML = htmlEst;
 }
 
 cargarMatrices().catch((err) => notificar("Error al cargar matrices: " + err.message, "error"));

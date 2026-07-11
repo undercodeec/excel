@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from sqlalchemy.orm import Session
 
+from app.models.empresa import Empresa
 from app.models.matriz import Matriz, FactorMatriz
 from app.models.enums import TipoMatriz
 from app.schemas.matriz import MatrizCreate, MatrizUpdate, ESCALAS
@@ -69,12 +70,21 @@ def calcular_matriz(db: Session, matriz_id: int) -> dict:
     if matriz is None:
         raise ValueError("Matriz no encontrada.")
 
+    empresa = db.get(Empresa, matriz.empresa_id)
+    empresa_info = {
+        "empresa_nombre": empresa.nombre if empresa else None,
+        "empresa_mision": empresa.mision if empresa else None,
+        "empresa_vision": empresa.vision if empresa else None,
+        "empresa_periodo": empresa.periodo if empresa else None,
+        "empresa_moneda": empresa.moneda if empresa else "USD",
+    }
+
     if matriz.tipo == TipoMatriz.peyea:
-        return _calcular_peyea(matriz)
+        return {**empresa_info, **_calcular_peyea(matriz)}
     if matriz.tipo == TipoMatriz.pestel:
-        return _calcular_pestel(matriz)
+        return {**empresa_info, **_calcular_pestel(matriz)}
     if matriz.tipo == TipoMatriz.holmes:
-        return _calcular_holmes(matriz)
+        return {**empresa_info, **_calcular_holmes(matriz)}
 
     # Tipos ponderados estándar (EFI, EFE, AOOR, MPC, Aprovechabilidad, MADI, MADE)
     escala = ESCALAS.get(matriz.tipo, (1, 4))
@@ -84,6 +94,7 @@ def calcular_matriz(db: Session, matriz_id: int) -> dict:
     ]
     r = ponderacion.calcular(factores, escala_min=escala[0], escala_max=escala[1])
     return {
+        **empresa_info,
         "tipo": matriz.tipo.value,
         "total": r.total,
         "pesos_validos": r.pesos_validos,
