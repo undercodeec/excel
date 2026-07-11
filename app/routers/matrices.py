@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.schemas.matriz import MatrizCreate, MatrizRead, MatrizUpdate
+from app.schemas.matriz import FactorCreate, FactorRead, MatrizCreate, MatrizRead, MatrizUpdate
 from app.schemas.trazabilidad import InformeMatrizRead
 from app.services import matrices as svc
 from app.services import trazabilidad as svc_traza
@@ -49,6 +49,20 @@ def calcular(matriz_id: int, db: Session = Depends(get_db)):
         return svc.calcular_matriz(db, matriz_id)
     except ValueError as e:
         raise HTTPException(400, str(e))
+
+
+@router.post("/{matriz_id}/factores", response_model=FactorRead, status_code=201)
+def agregar_factor(matriz_id: int, data: FactorCreate, db: Session = Depends(get_db)):
+    f = svc.agregar_factor(db, matriz_id, data)
+    if f is None:
+        raise HTTPException(404, "Matriz no encontrada")
+    return f
+
+
+@router.delete("/{matriz_id}/factores/{factor_id}", status_code=204)
+def eliminar_factor(matriz_id: int, factor_id: int, db: Session = Depends(get_db)):
+    if not svc.eliminar_factor(db, matriz_id, factor_id):
+        raise HTTPException(404, "Factor no encontrado")
 
 
 @router.get("/{matriz_id}/informe", response_model=InformeMatrizRead)

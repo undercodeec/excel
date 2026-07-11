@@ -2,10 +2,111 @@
 // Cliente del módulo Matrices: consume /api/matrices y dibuja con Chart.js.
 
 const API = "/api/matrices";
+const API_EMP = "/api/empresa";
 let grafico = null;
+let matrizActivaId = null;
 
 // jsonFetch delega en el helper compartido apiFetch (comun.js).
 const jsonFetch = apiFetch;
+
+// ---------- Empresa ----------
+document.querySelector("#btn-cargar-empresa").addEventListener("click", async () => {
+  const id = document.querySelector("#emp-id").value;
+  try {
+    const emp = await jsonFetch(`${API_EMP}/${id}`);
+    document.querySelector("#emp-nombre").value = emp.nombre ?? "";
+    document.querySelector("#emp-periodo").value = emp.periodo ?? "";
+    document.querySelector("#emp-moneda").value = emp.moneda ?? "USD";
+    document.querySelector("#emp-mision").value = emp.mision ?? "";
+    document.querySelector("#emp-vision").value = emp.vision ?? "";
+    document.querySelector("#datos-empresa").hidden = false;
+    notificar("Empresa cargada.", "exito");
+  } catch (err) { notificar("Error al cargar empresa: " + err.message, "error"); }
+});
+
+document.querySelector("#form-empresa-edit").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const id = document.querySelector("#emp-id").value;
+  const payload = {
+    nombre: document.querySelector("#emp-nombre").value || undefined,
+    periodo: document.querySelector("#emp-periodo").value || undefined,
+    moneda: document.querySelector("#emp-moneda").value || undefined,
+    mision: document.querySelector("#emp-mision").value || undefined,
+    vision: document.querySelector("#emp-vision").value || undefined,
+  };
+  try {
+    await jsonFetch(`${API_EMP}/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    notificar("Empresa actualizada.", "exito");
+  } catch (err) { notificar("Error al guardar: " + err.message, "error"); }
+});
+
+// ---------- Factores ----------
+document.querySelector("#btn-cerrar-factores").addEventListener("click", () => {
+  document.querySelector("#panel-factores").hidden = true;
+  matrizActivaId = null;
+});
+
+async function abrirFactores(id, nombre) {
+  matrizActivaId = id;
+  document.querySelector("#titulo-factores").textContent = `Factores — ${nombre}`;
+  document.querySelector("#panel-factores").hidden = false;
+  document.querySelector("#panel-factores").scrollIntoView({ behavior: "smooth" });
+  await cargarFactores(id);
+}
+
+async function cargarFactores(id) {
+  const r = await jsonFetch(`${API}/${id}`);
+  const tbody = document.querySelector("#tabla-factores tbody");
+  tbody.innerHTML = "";
+  for (const f of r.factores) {
+    const tr = document.createElement("tr");
+    for (const v of [f.id, f.descripcion, f.peso ?? "—", f.calificacion ?? "—", f.resultado ?? "—"]) {
+      const td = document.createElement("td");
+      td.textContent = v;
+      tr.append(td);
+    }
+    const tdDel = document.createElement("td");
+    const bDel = document.createElement("button");
+    bDel.textContent = "Eliminar";
+    bDel.className = "peligro";
+    bDel.onclick = async () => {
+      await jsonFetch(`${API}/${id}/factores/${f.id}`, { method: "DELETE" });
+      await cargarFactores(id);
+    };
+    tdDel.append(bDel);
+    tr.append(tdDel);
+    tbody.append(tr);
+  }
+}
+
+document.querySelector("#form-factor").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  if (!matrizActivaId) return;
+  const desc = document.querySelector("#factor-desc").value;
+  const peso = document.querySelector("#factor-peso").value;
+  const cal = document.querySelector("#factor-cal").value;
+  const payload = {
+    descripcion: desc,
+    peso: peso ? Number(peso) : null,
+    calificacion: cal ? Number(cal) : null,
+  };
+  try {
+    await jsonFetch(`${API}/${matrizActivaId}/factores`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    document.querySelector("#factor-desc").value = "";
+    document.querySelector("#factor-peso").value = "";
+    document.querySelector("#factor-cal").value = "";
+    await cargarFactores(matrizActivaId);
+    notificar("Factor agregado.", "exito");
+  } catch (err) { notificar("Error: " + err.message, "error"); }
+});
 
 // ---------- Listado ----------
 async function cargarMatrices() {
@@ -20,6 +121,10 @@ async function cargarMatrices() {
       tr.append(c);
     }
     const td = document.createElement("td");
+    const bFact = document.createElement("button");
+    bFact.textContent = "Factores";
+    bFact.style.background = "#5c35a8";
+    bFact.onclick = conManejoErrores(() => abrirFactores(m.id, m.nombre), "Error al cargar factores");
     const bCalc = document.createElement("button");
     bCalc.textContent = "Calcular";
     bCalc.onclick = conManejoErrores(() => calcular(m.id, m.tipo), "Error al calcular");
@@ -31,7 +136,7 @@ async function cargarMatrices() {
     bDel.textContent = "Eliminar";
     bDel.className = "peligro";
     bDel.onclick = conManejoErrores(() => eliminar(m.id), "Error al eliminar");
-    td.append(bCalc, " ", bInf, " ", bDel);
+    td.append(bFact, " ", bCalc, " ", bInf, " ", bDel);
     tr.append(td);
     cuerpo.append(tr);
   }

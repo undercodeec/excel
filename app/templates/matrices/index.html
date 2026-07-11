@@ -29,9 +29,44 @@
 </section>
 
 <section class="panel">
+  <h2>Datos de empresa</h2>
+  <form id="form-empresa" class="form-inline">
+    <label>Empresa ID <input type="number" id="emp-id" value="1" min="1" required></label>
+    <button type="button" id="btn-cargar-empresa">Cargar</button>
+  </form>
+  <div id="datos-empresa" hidden style="margin-top:1rem">
+    <form id="form-empresa-edit" class="form-inline">
+      <label>Nombre <input type="text" id="emp-nombre" maxlength="200" required></label>
+      <label>Período <input type="text" id="emp-periodo" maxlength="50" placeholder="2024-2026"></label>
+      <label>Moneda <input type="text" id="emp-moneda" maxlength="10" placeholder="USD"></label>
+      <label class="campo-ancho">Misión <input type="text" id="emp-mision"></label>
+      <label class="campo-ancho">Visión <input type="text" id="emp-vision"></label>
+      <button type="submit">Guardar empresa</button>
+    </form>
+  </div>
+</section>
+
+<section class="panel">
   <h2>Listado</h2>
   <table id="tabla-matrices">
     <thead><tr><th>ID</th><th>Tipo</th><th>Nombre</th><th>Acciones</th></tr></thead>
+    <tbody></tbody>
+  </table>
+</section>
+
+<section class="panel" id="panel-factores" hidden>
+  <div class="panel-encabezado">
+    <h2 id="titulo-factores">Factores de matriz</h2>
+    <button id="btn-cerrar-factores">Cerrar</button>
+  </div>
+  <form id="form-factor" class="form-inline">
+    <label class="campo-ancho">Descripción <input type="text" id="factor-desc" maxlength="300" required></label>
+    <label>Peso (0–1) <input type="number" id="factor-peso" step="0.001" min="0" max="1"></label>
+    <label>Calificación <input type="number" id="factor-cal" step="0.01"></label>
+    <button type="submit">Agregar factor</button>
+  </form>
+  <table id="tabla-factores" class="tabla-editable" style="margin-top:1rem">
+    <thead><tr><th>ID</th><th>Descripción</th><th>Peso</th><th>Calificación</th><th>Resultado</th><th>Eliminar</th></tr></thead>
     <tbody></tbody>
   </table>
 </section>

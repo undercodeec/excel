@@ -8,7 +8,7 @@ from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 
 from app.config import settings
-from app.routers import auth, cmi, dashboard, export, matrices, planes, trazabilidad
+from app.routers import auth, cmi, dashboard, empresa, export, matrices, planes, trazabilidad
 
 BASE_DIR = Path(__file__).resolve().parent
 STATIC_CSS_PATH = BASE_DIR / "static" / "css" / "estilos.css"
@@ -20,6 +20,7 @@ app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
 app.include_router(auth.router)
+app.include_router(empresa.router)
 app.include_router(matrices.router)
 app.include_router(planes.router)
 app.include_router(cmi.router)

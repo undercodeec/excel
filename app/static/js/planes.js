@@ -311,9 +311,11 @@ document.querySelector("#form-estrategia").addEventListener("submit", async (e) 
   const plan = planActivo();
   if (!plan) return;
   if (!validarTextoObligatorio("#descripcion_estrategia", "La estrategia es obligatoria.")) return;
+  const matrizIdVal = document.querySelector("#matriz_id_estrategia").value;
   const payload = {
     tipo_estrategia: document.querySelector("#tipo_estrategia").value || null,
     descripcion: document.querySelector("#descripcion_estrategia").value,
+    matriz_id: matrizIdVal ? Number(matrizIdVal) : null,
   };
   try {
     await jsonFetch(`${API_PLANES}/${plan.id}/estrategias`, {
@@ -323,6 +325,7 @@ document.querySelector("#form-estrategia").addEventListener("submit", async (e) 
     });
     document.querySelector("#tipo_estrategia").value = "";
     document.querySelector("#descripcion_estrategia").value = "";
+    document.querySelector("#matriz_id_estrategia").value = "";
     await cargarPlanes();
   } catch (err) {
     notificar("Error al agregar estrategia: " + err.message, "error");

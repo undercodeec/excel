@@ -32,6 +32,37 @@ def crear_matriz(db: Session, data: MatrizCreate) -> Matriz:
     return matriz
 
 
+def agregar_factor(db: Session, matriz_id: int, data) -> FactorMatriz | None:
+    matriz = db.get(Matriz, matriz_id)
+    if matriz is None:
+        return None
+    resultado = None
+    if data.peso is not None and data.calificacion is not None:
+        resultado = round(data.peso * data.calificacion, 6)
+    factor = FactorMatriz(
+        matriz_id=matriz_id,
+        descripcion=data.descripcion,
+        peso=data.peso,
+        calificacion=data.calificacion,
+        resultado=resultado,
+        extra_json=data.extra_json,
+    )
+    db.add(factor)
+    db.commit()
+    db.refresh(factor)
+    return factor
+
+
+def eliminar_factor(db: Session, matriz_id: int, factor_id: int) -> bool:
+    from app.models.matriz import FactorMatriz as FM
+    factor = db.query(FM).filter(FM.id == factor_id, FM.matriz_id == matriz_id).first()
+    if factor is None:
+        return False
+    db.delete(factor)
+    db.commit()
+    return True
+
+
 def listar_matrices(db: Session, empresa_id: int | None = None) -> list[Matriz]:
     q = db.query(Matriz)
     if empresa_id is not None:
