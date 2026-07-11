@@ -89,3 +89,30 @@ def test_calculo_peyea(client):
     assert body["cuadrante"] == "Agresivo"
     assert body["x"] == 3.0
     assert body["y"] == 2.0
+
+
+def test_agregar_y_eliminar_factor(client):
+    emp_id = _crear_empresa_directa(client)
+    payload = {
+        "empresa_id": emp_id,
+        "tipo": "efi",
+        "nombre": "EFI factores",
+        "factores": [],
+    }
+    r = client.post("/api/matrices", json=payload)
+    assert r.status_code == 201, r.text
+    mid = r.json()["id"]
+
+    r = client.post(
+        f"/api/matrices/{mid}/factores",
+        json={"descripcion": "Nuevo factor", "peso": 0.5, "calificacion": 4},
+    )
+    assert r.status_code == 201, r.text
+    factor_id = r.json()["id"]
+
+    r = client.get(f"/api/matrices/{mid}")
+    assert r.status_code == 200
+    assert len(r.json()["factores"]) == 1
+
+    r = client.delete(f"/api/matrices/{mid}/factores/{factor_id}")
+    assert r.status_code == 204

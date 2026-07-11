@@ -12,6 +12,7 @@ from app.routers import auth, cmi, dashboard, empresa, export, matrices, planes,
 
 BASE_DIR = Path(__file__).resolve().parent
 STATIC_CSS_PATH = BASE_DIR / "static" / "css" / "estilos.css"
+STATIC_JS_DIR = BASE_DIR / "static" / "js"
 
 app = FastAPI(title=settings.app_name)
 app.add_middleware(SessionMiddleware, secret_key=settings.secret_key, same_site="lax")
@@ -30,11 +31,16 @@ app.include_router(export.router)
 
 
 def contexto_base(request: Request) -> dict:
+    js_version = max(
+        (int(path.stat().st_mtime) for path in STATIC_JS_DIR.glob("*.js")),
+        default=0,
+    )
     return {
         "app_name": settings.app_name,
         "usuario": request.session.get("username"),
         "empresa_id_sesion": request.session.get("empresa_id"),
         "static_css_version": int(STATIC_CSS_PATH.stat().st_mtime),
+        "static_js_version": js_version,
     }
 
 

@@ -336,7 +336,15 @@ async function verInforme(id) {
   // --- Estrategias vinculadas ---
   const estDiv = document.querySelector("#inf-estrategias");
   if (!inf.estrategias_vinculadas?.length) {
-    estDiv.innerHTML = `<p style="color:#888;margin-top:1rem">No hay estrategias vinculadas a esta matriz aún.</p>`;
+    estDiv.innerHTML = `
+      <div class="panel" style="margin-top:1rem;background:#fff8e1;border:1px solid #f0d48a">
+        <h3 style="margin-top:0">Estrategias y planes derivados</h3>
+        <p style="margin:.3rem 0;color:#6b5a2b">No hay estrategias vinculadas a esta matriz aún.</p>
+        <p style="margin:.4rem 0"><strong>Para que esta información aparezca:</strong></p>
+        <p style="margin:.2rem 0">1. Ve a <strong>Planes</strong> y crea o abre un plan.</p>
+        <p style="margin:.2rem 0">2. En <strong>Agregar estrategia</strong>, llena el campo <strong>Matriz origen ID</strong> con el ID de esta matriz: <strong>${esc(inf.matriz_id)}</strong>.</p>
+        <p style="margin:.2rem 0">3. Guarda la estrategia. Si quieres más detalle en el informe, agrega actividades o KPIs a esa estrategia.</p>
+      </div>`;
     return;
   }
 
